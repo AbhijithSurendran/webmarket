@@ -2,7 +2,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { getDB } from "@/lib/db"
 import { deleteProduct } from "@/app/actions/products"
-import { Plus, Pencil, Trash2 } from "lucide-react"
+import { Plus, Pencil, Trash2, Image as ImageIcon } from "lucide-react"
 
 export default async function ProductsAdminPage() {
     const db = await getDB();
@@ -54,7 +54,7 @@ export default async function ProductsAdminPage() {
                                                     </div>
                                                 ) : (
                                                     <div className="w-12 h-12 rounded-xl bg-gray-100 border border-gray-200 flex items-center justify-center text-gray-400 flex-shrink-0">
-                                                        <Image size={24} />
+                                                        <ImageIcon size={24} />
                                                     </div>
                                                 )}
                                                 <div>

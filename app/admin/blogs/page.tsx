@@ -3,7 +3,7 @@ import Image from "next/image"
 import { getDB } from "@/lib/db"
 import { deleteBlog } from "@/app/actions/blogs"
 import { formatDate } from "@/lib/utils"
-import { Plus, Pencil, Trash2 } from "lucide-react"
+import { Plus, Pencil, Trash2, Image as ImageIcon } from "lucide-react"
 
 export default async function BlogsAdminPage() {
     const db = await getDB();
@@ -42,7 +42,7 @@ export default async function BlogsAdminPage() {
                                 </div>
                             ) : (
                                 <div className="hidden sm:flex w-28 h-20 rounded-xl bg-gray-50 border border-gray-200 items-center justify-center text-gray-300 flex-shrink-0">
-                                    <Image size={24} />
+                                    <ImageIcon size={24} />
                                 </div>
                             )}
 

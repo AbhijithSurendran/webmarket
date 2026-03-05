@@ -14,6 +14,11 @@ export async function getBlogBySlug(slug: string): Promise<Blog | undefined> {
     return db.blogs.find(b => b.slug === slug);
 }
 
+export async function getBlogById(id: string): Promise<Blog | undefined> {
+    const db = await getDB();
+    return db.blogs.find(b => b.id === id);
+}
+
 export async function createBlog(formData: FormData): Promise<{ success: boolean; error?: string }> {
     try {
         const title = formData.get("title") as string;
