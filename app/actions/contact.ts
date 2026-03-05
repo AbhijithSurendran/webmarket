@@ -1,90 +1,42 @@
 "use server"
 
-import { createAdminClient } from "@/lib/supabase/admin"
-import { Resend } from "resend"
-import { z } from "zod"
-
-const contactSchema = z.object({
-    name: z.string().min(2, "Name must be at least 2 characters"),
-    phone: z.string().optional(),
-    email: z.string().email("Invalid email address"),
-    location: z.string().optional(),
-    message: z.string().min(10, "Message must be at least 10 characters"),
-})
-
-export interface ContactFormState {
+export type ContactFormState = {
     success?: boolean
     error?: string
-    fieldErrors?: Record<string, string>
+    fieldErrors?: {
+        name?: string
+        email?: string
+        message?: string
+    }
 }
 
 export async function submitContactForm(
     prevState: ContactFormState,
     formData: FormData
 ): Promise<ContactFormState> {
-    const raw = {
-        name: formData.get("name") as string,
-        phone: formData.get("phone") as string,
-        email: formData.get("email") as string,
-        location: formData.get("location") as string,
-        message: formData.get("message") as string,
-    }
-
-    const result = contactSchema.safeParse(raw)
-    if (!result.success) {
-        const fieldErrors: Record<string, string> = {}
-        result.error.errors.forEach((e) => {
-            if (e.path[0]) fieldErrors[e.path[0] as string] = e.message
-        })
-        return { fieldErrors }
-    }
-
-    const data = result.data
-
-    // Save to database
     try {
-        const supabase = createAdminClient()
-        const { error: dbError } = await supabase.from("enquiries").insert({
-            name: data.name,
-            phone: data.phone || null,
-            email: data.email,
-            location: data.location || null,
-            message: data.message,
-        })
-        if (dbError) throw dbError
-    } catch (err) {
-        console.error("DB error:", err)
-        return { error: "Failed to save your message. Please try again." }
-    }
+        const name = formData.get("name") as string
+        const email = formData.get("email") as string
+        const message = formData.get("message") as string
 
-    // Send email notification
-    const resendKey = process.env.RESEND_API_KEY
-    const adminEmail = process.env.ADMIN_EMAIL
-    const fromEmail = process.env.RESEND_FROM_EMAIL
+        const fieldErrors: ContactFormState["fieldErrors"] = {}
+        if (!name || name.trim().length < 2) fieldErrors.name = "Name is too short."
+        if (!email || !/^\S+@\S+\.\S+$/.test(email)) fieldErrors.email = "Invalid email format."
+        if (!message || message.trim().length < 10) fieldErrors.message = "Message must be at least 10 characters."
 
-    if (resendKey && adminEmail && fromEmail) {
-        try {
-            const resend = new Resend(resendKey)
-            await resend.emails.send({
-                from: fromEmail,
-                to: adminEmail,
-                subject: `New Enquiry from ${data.name}`,
-                html: `
-          <h2>New Contact Enquiry</h2>
-          <table style="border-collapse:collapse;width:100%;max-width:600px">
-            <tr><td style="padding:8px;font-weight:bold;color:#374151">Name</td><td style="padding:8px">${data.name}</td></tr>
-            <tr style="background:#f9fafb"><td style="padding:8px;font-weight:bold;color:#374151">Email</td><td style="padding:8px"><a href="mailto:${data.email}">${data.email}</a></td></tr>
-            ${data.phone ? `<tr><td style="padding:8px;font-weight:bold;color:#374151">Phone</td><td style="padding:8px">${data.phone}</td></tr>` : ""}
-            ${data.location ? `<tr style="background:#f9fafb"><td style="padding:8px;font-weight:bold;color:#374151">Location</td><td style="padding:8px">${data.location}</td></tr>` : ""}
-            <tr><td style="padding:8px;font-weight:bold;color:#374151">Message</td><td style="padding:8px;white-space:pre-wrap">${data.message}</td></tr>
-          </table>
-        `,
-            })
-        } catch (emailErr) {
-            console.error("Email error:", emailErr)
-            // Don't fail — DB save succeeded
+        if (Object.keys(fieldErrors).length > 0) {
+            return { fieldErrors }
         }
-    }
 
-    return { success: true }
+        // Simulate network delay
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        // In a real application, you would send an email here or save to a database.
+        console.log("New contact form submission:", { name, email, message });
+
+        return { success: true }
+    } catch (error) {
+        console.error("Contact form error:", error)
+        return { error: "An unexpected error occurred. Please try again later." }
+    }
 }

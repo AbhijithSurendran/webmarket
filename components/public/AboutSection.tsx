@@ -1,15 +1,13 @@
 import Image from "next/image"
 import Link from "next/link"
-import type { Json } from "@/lib/types/database"
 
 interface AboutSectionProps {
-    content?: Json | null
+    content?: string | null
     bannerImage?: string | null
 }
 
 export default function AboutSection({ content, bannerImage }: AboutSectionProps) {
-    const data = (content as Record<string, string>) ?? {}
-    const description = data.description || "WebMarket was founded with a simple mission: to deliver exceptional quality products and services. For over a decade, we have been a trusted name in the industry, built on integrity, innovation, and customer satisfaction."
+    const description = content || "WebMarket was founded with a simple mission: to deliver exceptional quality products and services. For over a decade, we have been a trusted name in the industry, built on integrity, innovation, and customer satisfaction."
     const image = bannerImage || "https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80"
 
     return (
@@ -59,9 +57,9 @@ export default function AboutSection({ content, bannerImage }: AboutSectionProps
                             ))}
                         </div>
 
-                        <Link href="/about" className="btn-primary">
+                        {/* <Link href="/about" className="btn-primary">
                             Learn More About Us
-                        </Link>
+                        </Link> */}
                     </div>
                 </div>
             </div>

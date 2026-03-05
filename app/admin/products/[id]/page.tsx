@@ -1,9 +1,9 @@
-import { createClient } from "@/lib/supabase/server"
+import { getProductById } from "@/app/actions/products"
 import { notFound } from "next/navigation"
 import ProductForm from "../ProductForm"
+
 export default async function EditProductPage({ params }: { params: { id: string } }) {
-    let item = null
-    try { const s = createClient(); const { data } = await s.from("products").select("*").eq("id", params.id).single(); item = data } catch { }
+    const item = await getProductById(params.id)
     if (!item) notFound()
     return <ProductForm item={item} />
 }

@@ -46,8 +46,8 @@ export default function AdminSidebar() {
                         href={href}
                         onClick={() => setIsOpen(false)}
                         className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${isActive(href, exact)
-                                ? "bg-primary-50 text-primary-700"
-                                : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                            ? "bg-primary-50 text-primary-700"
+                            : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
                             }`}
                     >
                         <Icon size={18} className={isActive(href, exact) ? "text-primary-600" : "text-gray-400"} />

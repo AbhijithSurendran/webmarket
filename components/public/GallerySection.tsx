@@ -2,24 +2,24 @@
 
 import { useState } from "react"
 import Image from "next/image"
-import type { GalleryItem } from "@/lib/types/database"
+import type { GalleryImage } from "@/lib/types"
 
 interface GallerySectionProps {
-    items: GalleryItem[]
+    items: GalleryImage[]
 }
 
-const fallback: Partial<GalleryItem>[] = [
-    { id: "1", image_url: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&q=80", caption: "Office Space" },
-    { id: "2", image_url: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&q=80", caption: "Team Meeting" },
-    { id: "3", image_url: "https://images.unsplash.com/photo-1551434678-e076c223a692?w=600&q=80", caption: "Dev Lab" },
-    { id: "4", image_url: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=600&q=80", caption: "Tech Showcase" },
-    { id: "5", image_url: "https://images.unsplash.com/photo-1542744094-3a31f272c490?w=600&q=80", caption: "Presentation" },
-    { id: "6", image_url: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600&q=80", caption: "Support Team" },
+const fallback: Partial<GalleryImage>[] = [
+    { id: "1", url: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&q=80", alt: "Office Space" },
+    { id: "2", url: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&q=80", alt: "Team Meeting" },
+    { id: "3", url: "https://images.unsplash.com/photo-1551434678-e076c223a692?w=600&q=80", alt: "Dev Lab" },
+    { id: "4", url: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=600&q=80", alt: "Tech Showcase" },
+    { id: "5", url: "https://images.unsplash.com/photo-1542744094-3a31f272c490?w=600&q=80", alt: "Presentation" },
+    { id: "6", url: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600&q=80", alt: "Support Team" },
 ]
 
 export default function GallerySection({ items }: GallerySectionProps) {
     const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
-    const display = items.length > 0 ? items.slice(0, 6) : (fallback as GalleryItem[])
+    const display = items.length > 0 ? items.slice(0, 6) : (fallback as GalleryImage[])
 
     return (
         <section className="page-section bg-white">
@@ -41,11 +41,11 @@ export default function GallerySection({ items }: GallerySectionProps) {
                             key={item.id}
                             onClick={() => setLightboxIndex(index)}
                             className="relative h-48 md:h-64 overflow-hidden rounded-xl group cursor-pointer"
-                            aria-label={item.caption || `Gallery image ${index + 1}`}
+                            aria-label={item.alt || `Gallery image ${index + 1}`}
                         >
                             <Image
-                                src={item.image_url}
-                                alt={item.caption || `Gallery ${index + 1}`}
+                                src={item.url}
+                                alt={item.alt || `Gallery ${index + 1}`}
                                 fill
                                 className="object-cover group-hover:scale-105 transition-transform duration-500"
                                 sizes="(max-width: 768px) 50vw, 33vw"
@@ -55,9 +55,9 @@ export default function GallerySection({ items }: GallerySectionProps) {
                                     View
                                 </span>
                             </div>
-                            {item.caption && (
+                            {item.alt && (
                                 <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <p className="text-white text-xs font-medium">{item.caption}</p>
+                                    <p className="text-white text-xs font-medium">{item.alt}</p>
                                 </div>
                             )}
                         </button>
@@ -97,8 +97,8 @@ export default function GallerySection({ items }: GallerySectionProps) {
                         onClick={(e) => e.stopPropagation()}
                     >
                         <Image
-                            src={display[lightboxIndex].image_url}
-                            alt={display[lightboxIndex].caption || "Gallery"}
+                            src={display[lightboxIndex].url}
+                            alt={display[lightboxIndex].alt || "Gallery"}
                             fill
                             className="object-contain"
                             sizes="100vw"
@@ -114,9 +114,9 @@ export default function GallerySection({ items }: GallerySectionProps) {
                     >
                         ›
                     </button>
-                    {display[lightboxIndex].caption && (
+                    {display[lightboxIndex].alt && (
                         <p className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white text-sm bg-black/50 px-4 py-2 rounded-full">
-                            {display[lightboxIndex].caption}
+                            {display[lightboxIndex].alt}
                         </p>
                     )}
                 </div>

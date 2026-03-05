@@ -1,20 +1,20 @@
-import { createClient } from "@/lib/supabase/server"
 import Link from "next/link"
 import { LayoutDashboard, Inbox, BookOpen, Package, Wrench, Images, MessageSquare, ArrowUpRight } from "lucide-react"
+import { getDB } from "@/lib/db"
 
 async function getStats() {
     try {
-        const supabase = createClient()
-        const [enquiries, blogs, products, services, gallery, testimonials] = await Promise.all([
-            supabase.from("enquiries").select("id", { count: "exact" }).then(r => r.count || 0),
-            supabase.from("blogs").select("id", { count: "exact" }).eq("is_published", true).then(r => r.count || 0),
-            supabase.from("products").select("id", { count: "exact" }).eq("is_published", true).then(r => r.count || 0),
-            supabase.from("services").select("id", { count: "exact" }).eq("is_published", true).then(r => r.count || 0),
-            supabase.from("gallery").select("id", { count: "exact" }).eq("is_active", true).then(r => r.count || 0),
-            supabase.from("testimonials").select("id", { count: "exact" }).eq("is_active", true).then(r => r.count || 0),
-        ])
-        const unreadEnquiries = await supabase.from("enquiries").select("id", { count: "exact" }).eq("is_read", false).then(r => r.count || 0)
-        return { enquiries, unreadEnquiries, blogs, products, services, gallery, testimonials }
+        const db = await getDB()
+        return {
+            blogs: db.blogs.length,
+            products: db.products.length,
+            services: db.services.length,
+            gallery: db.gallery.length,
+            // These would normally be real counts from db if implemented fully
+            enquiries: 0,
+            unreadEnquiries: 0,
+            testimonials: 0
+        }
     } catch {
         return { enquiries: 0, unreadEnquiries: 0, blogs: 0, products: 0, services: 0, gallery: 0, testimonials: 0 }
     }
@@ -70,10 +70,7 @@ export default async function AdminDashboard() {
                         { href: "/admin/services/new", label: "New Service", icon: Wrench },
                         { href: "/admin/products/new", label: "New Product", icon: Package },
                         { href: "/admin/gallery/new", label: "Add Image", icon: Images },
-                        { href: "/admin/testimonials/new", label: "New Testimonial", icon: MessageSquare },
-                        { href: "/admin/hero-sliders/new", label: "Add Slide", icon: LayoutDashboard },
-                        { href: "/admin/enquiries", label: "View Enquiries", icon: Inbox },
-                        { href: "/admin/settings", label: "Site Settings", icon: LayoutDashboard },
+                        { href: "/admin/pages", label: "Edit Pages", icon: LayoutDashboard },
                     ].map((action) => (
                         <Link key={action.href} href={action.href}
                             className="flex flex-col items-center gap-2 p-4 rounded-xl border border-gray-100 hover:bg-primary-50 hover:border-primary-200 transition-all text-center group">

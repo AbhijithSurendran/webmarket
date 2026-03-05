@@ -1,8 +1,8 @@
 import Image from "next/image"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
-import type { Service } from "@/lib/types/database"
 import { truncate } from "@/lib/utils"
+import type { Service } from "@/lib/types"
 
 interface ServicesSectionProps {
     services: Service[]
@@ -12,9 +12,9 @@ export default function ServicesSection({ services }: ServicesSectionProps) {
     const display = services.slice(0, 6)
 
     const fallback: Partial<Service>[] = [
-        { id: "1", title: "Business Consulting", description: "Expert guidance to help your business grow.", image_url: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=600&q=80", slug: "consulting" },
-        { id: "2", title: "Digital Marketing", description: "Comprehensive digital strategies to boost your brand.", image_url: "https://images.unsplash.com/photo-1432888622747-4eb9a8efeb07?w=600&q=80", slug: "digital-marketing" },
-        { id: "3", title: "Web Development", description: "Custom web solutions for performance and scale.", image_url: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=600&q=80", slug: "web-development" },
+        { id: "1", title: "Business Consulting", description: "Expert guidance to help your business grow.", image: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=600&q=80", slug: "consulting" },
+        { id: "2", title: "Digital Marketing", description: "Comprehensive digital strategies to boost your brand.", image: "https://images.unsplash.com/photo-1432888622747-4eb9a8efeb07?w=600&q=80", slug: "digital-marketing" },
+        { id: "3", title: "Web Development", description: "Custom web solutions for performance and scale.", image: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=600&q=80", slug: "web-development" },
     ]
 
     const items = display.length > 0 ? display : (fallback as Service[])
@@ -44,8 +44,8 @@ export default function ServicesSection({ services }: ServicesSectionProps) {
                         >
                             <div className="relative h-52 overflow-hidden">
                                 <Image
-                                    src={service.image_url || "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&q=80"}
-                                    alt={service.title}
+                                    src={service.image || "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&q=80"}
+                                    alt={service.title!}
                                     fill
                                     className="object-cover group-hover:scale-105 transition-transform duration-500"
                                     sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"

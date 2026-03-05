@@ -4,15 +4,15 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { upsertHeroSlide } from "@/app/actions/cms"
 import ImageUpload from "@/components/admin/ImageUpload"
-import type { HeroSlider } from "@/lib/types/database"
+import type { HeroSlider } from "@/lib/types"
 import { ArrowLeft, Loader2 } from "lucide-react"
 import Link from "next/link"
 
 interface Props { slide?: HeroSlider }
 
 export default function HeroSlideForm({ slide }: Props) {
-    const [imageUrl, setImageUrl] = useState(slide?.image_url || "")
-    const [isActive, setIsActive] = useState(slide?.is_active ?? true)
+    const [imageUrl, setImageUrl] = useState(slide?.imageUrl || "")
+    const [isActive, setIsActive] = useState(slide?.isActive ?? true)
     const [isPending, setIsPending] = useState(false)
     const router = useRouter()
 
@@ -53,18 +53,18 @@ export default function HeroSlideForm({ slide }: Props) {
                 <div className="grid grid-cols-2 gap-4">
                     <div>
                         <label className="label" htmlFor="slide-btn-text">Button Text</label>
-                        <input id="slide-btn-text" name="button_text" type="text" defaultValue={slide?.button_text || ""} className="input-field" placeholder="Learn More" />
+                        <input id="slide-btn-text" name="button_text" type="text" defaultValue={slide?.buttonText || ""} className="input-field" placeholder="Learn More" />
                     </div>
                     <div>
                         <label className="label" htmlFor="slide-btn-link">Button Link</label>
-                        <input id="slide-btn-link" name="button_link" type="text" defaultValue={slide?.button_link || ""} className="input-field" placeholder="/services" />
+                        <input id="slide-btn-link" name="button_link" type="text" defaultValue={slide?.buttonLink || ""} className="input-field" placeholder="/services" />
                     </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                     <div>
                         <label className="label" htmlFor="slide-order">Sort Order</label>
-                        <input id="slide-order" name="sort_order" type="number" defaultValue={slide?.sort_order || 0} className="input-field" />
+                        <input id="slide-order" name="sort_order" type="number" defaultValue={slide?.sortOrder || 0} className="input-field" />
                     </div>
                     <div className="flex flex-col justify-end">
                         <label className="flex items-center gap-2 cursor-pointer py-2">

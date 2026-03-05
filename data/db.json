@@ -1,0 +1,185 @@
+{
+  "heroSliders": [
+    {
+      "id": "i8wfhr5h5mmaccwilvfpz5",
+      "imageUrl": "/uploads/74ab9fc3-6be6-40f9-a237-f52cf1153919-1772184742598.webp",
+      "title": "hh",
+      "description": null,
+      "buttonText": null,
+      "buttonLink": null,
+      "sortOrder": 0,
+      "isActive": true,
+      "createdAt": "2026-02-27T09:32:26.775Z",
+      "updatedAt": "2026-03-05T09:57:55.045Z"
+    }
+  ],
+  "users": [
+    {
+      "id": "u1",
+      "email": "admin@webmarket.com",
+      "password": "password123",
+      "role": "admin",
+      "createdAt": "2026-02-26T00:00:00.000Z"
+    }
+  ],
+  "products": [
+    {
+      "id": "p1",
+      "title": "Premium Wireless Headphones",
+      "slug": "premium-wireless-headphones",
+      "description": "<p>Experience crystal-clear audio with our top-of-the-line wireless headphones. Features active noise cancellation and 30-hour battery life.</p>",
+      "features": [
+        "Active Noise Cancellation",
+        "Bluetooth 5.2",
+        "30-hour battery",
+        "Premium Leather Cushions"
+      ],
+      "price": 299.99,
+      "image": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=1000",
+      "createdAt": "2026-02-25T10:00:00.000Z",
+      "updatedAt": "2026-02-25T10:00:00.000Z"
+    },
+    {
+      "id": "p2",
+      "title": "Mechanical Keyboard Pro",
+      "slug": "mechanical-keyboard-pro",
+      "description": "<p>Boost your productivity with our tactile mechanical keyboard. Customizable RGB lighting and hot-swappable switches.</p>",
+      "features": [
+        "Cherry MX Blue Switches",
+        "RGB Backlighting",
+        "Hot-swappable",
+        "Aluminum Frame"
+      ],
+      "price": 149.5,
+      "image": "https://images.unsplash.com/photo-1595225476474-87563907a212?q=80&w=1000",
+      "createdAt": "2026-02-26T08:30:00.000Z",
+      "updatedAt": "2026-02-26T08:30:00.000Z"
+    },
+    {
+      "id": "n1x6g3yqbtbavivaeslkt",
+      "title": "Sweets",
+      "slug": "sweets",
+      "description": "<p>fyfgjb</p>",
+      "features": [],
+      "price": 132,
+      "image": "/uploads/487172835288347046061783478870846910224268875n11-1772706364234.jpg",
+      "createdAt": "2026-03-05T10:26:05.504Z",
+      "updatedAt": "2026-03-05T10:26:05.504Z"
+    }
+  ],
+  "services": [
+    {
+      "id": "s1",
+      "title": "Web Development Consulting",
+      "slug": "web-development-consulting",
+      "description": "<p>Expert guidance on modern web architectures, performance optimization, and scalable application design. Our seasoned engineers help you build robust digital solutions.</p>",
+      "benefits": [
+        "Architecture Review",
+        "Performance Audits",
+        "Technology Stack Selection",
+        "Security Analysis"
+      ],
+      "image": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=1000",
+      "createdAt": "2026-02-20T14:15:00.000Z",
+      "updatedAt": "2026-02-20T14:15:00.000Z"
+    },
+    {
+      "id": "s2",
+      "title": "UI/UX Design Masterclass",
+      "slug": "ui-ux-design-masterclass",
+      "description": "<p>Comprehensive design services ensuring your applications are not only beautiful but intuitively usable. We specialize in modern, accessible interfaces.</p>",
+      "benefits": [
+        "Wireframing & Prototyping",
+        "User Research",
+        "Design Systems",
+        "Accessibility Testing"
+      ],
+      "image": "https://images.unsplash.com/photo-1561070791-2526d30994b5?q=80&w=1000",
+      "createdAt": "2026-02-22T09:45:00.000Z",
+      "updatedAt": "2026-02-22T09:45:00.000Z"
+    },
+    {
+      "id": "4dt5h9k37vriqwhjb4zfnm",
+      "title": "QA AUTOMATION",
+      "slug": "qa-automation",
+      "description": "<p><strong>Lorem Ipsum</strong> is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</p>",
+      "benefits": [],
+      "image": "/uploads/57434583712854631002886166417921519559802056n-1772705400817.jpg",
+      "createdAt": "2026-03-05T10:05:19.189Z",
+      "updatedAt": "2026-03-05T10:10:02.880Z"
+    }
+  ],
+  "blogs": [
+    {
+      "id": "b1",
+      "title": "The Future of Web Development in 2026",
+      "slug": "future-of-web-development-2026",
+      "excerpt": "Exploring the latest trends in server components, edge computing, and AI-assisted coding.",
+      "content": "<h2>Introduction</h2><p>The landscape of web development is shifting rapidly...</p><h3>Server Actions</h3><p>Next.js continues to dominate with its App Router...</p>",
+      "author": "Jane Doe",
+      "image": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1000",
+      "createdAt": "2026-02-24T11:20:00.000Z",
+      "updatedAt": "2026-02-24T11:20:00.000Z"
+    },
+    {
+      "id": "b2",
+      "title": "Why we chose a File-Based CMS",
+      "slug": "why-file-based-cms",
+      "excerpt": "How simplifying our database architecture led to faster deployments and easier local development.",
+      "content": "<h2>The Problem with Complex DBs</h2><p>For small to medium projects, managing a separate database adds overhead...</p><h2>The JSON Solution</h2><p>Using a simple JSON file provides all the CRUD functionality we need without the setup hassle.</p>",
+      "author": "Admin",
+      "image": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1000",
+      "createdAt": "2026-02-26T12:00:00.000Z",
+      "updatedAt": "2026-02-26T12:00:00.000Z"
+    },
+    {
+      "id": "jezbkgi53yetlo8ax6bzw",
+      "title": "jhdhfu",
+      "slug": "jhdhfu",
+      "excerpt": "sdvwv",
+      "content": "<p>dwvwsf</p>",
+      "author": "Admin",
+      "image": "/uploads/465608264102317337302985786878080627451908866n-1772706984908.jpg",
+      "createdAt": "2026-03-05T10:36:26.060Z",
+      "updatedAt": "2026-03-05T10:36:26.060Z"
+    }
+  ],
+  "gallery": [
+    {
+      "id": "g1",
+      "url": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1000",
+      "caption": "Our Team at Work",
+      "createdAt": "2026-02-20T08:00:00.000Z"
+    },
+    {
+      "id": "g2",
+      "url": "https://images.unsplash.com/photo-1497215728101-856f4ea42174?q=80&w=1000",
+      "caption": "Modern Office Space",
+      "createdAt": "2026-02-21T09:30:00.000Z"
+    },
+    {
+      "id": "fuxdv1b8eo85x2s53f1kp8",
+      "url": "/uploads/92886a42-2a77-4716-856a-9529f0e53d71-1772706949852.webp",
+      "caption": null,
+      "createdAt": "2026-03-05T10:35:51.068Z"
+    }
+  ],
+  "pages": {
+    "home": {
+      "heroTitle": "Abhijith Surendran",
+      "heroSubtitle": "We build beautiful, fast, and scalable applications tailored to your business needs.",
+      "heroCta": "Explore Our Work"
+    },
+    "about": {
+      "title": "Our Story",
+      "content": "WebMarket was founded with a simple goal: to create exceptional digital products. We believe in the power of good design and robust engineering.",
+      "mission": "To empower businesses through technology.",
+      "vision": "A digital landscape where every application is a joy to use."
+    },
+    "contact": {
+      "email": "hello@webmarket.com",
+      "phone": "+1 (555) 987-6543",
+      "address": "456 Tech Lane, Innovation District, CA 90210"
+    }
+  }
+}

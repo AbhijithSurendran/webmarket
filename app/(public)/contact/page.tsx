@@ -1,95 +1,95 @@
 import type { Metadata } from "next"
-import { createClient } from "@/lib/supabase/server"
+import { MapPin, Phone, Mail } from "lucide-react"
+import PageHeader from "@/components/ui/PageHeader"
+import PageContainer from "@/components/ui/PageContainer"
 import ContactForm from "@/components/public/ContactForm"
-import { MapPin, Phone, Mail, Clock } from "lucide-react"
+import { getDB } from "@/lib/db"
 
 export const metadata: Metadata = {
     title: "Contact Us",
-    description: "Get in touch with WebMarket. We'd love to hear from you.",
+    description: "Get in touch with our team.",
 }
 
 export default async function ContactPage() {
-    let settings: Record<string, string> = {}
-    try {
-        const supabase = createClient()
-        const { data } = await supabase.from("site_settings").select("key, value")
-        if (data) settings = Object.fromEntries(data.map((s) => [s.key, s.value ?? ""]))
-    } catch { }
-
-    const address = settings.address || "123 Business Street, City, State 12345"
-    const phone = settings.phone || "+1 (555) 000-0000"
-    const email = settings.email || "info@webmarket.com"
-    const mapsEmbed = settings.google_maps_embed || ""
+    const db = await getDB();
+    const contactInfo = db.pages.contact;
 
     return (
         <>
-            {/* Banner */}
-            <div className="bg-gradient-to-r from-primary-800 to-primary-600 py-20">
-                <div className="container-custom text-center">
-                    <h1 className="text-4xl md:text-5xl font-heading font-bold text-white mb-4">Contact Us</h1>
-                    <p className="text-white/80 text-lg max-w-2xl mx-auto">Have a question or want to work together? We&apos;d love to hear from you.</p>
-                </div>
-            </div>
+            <PageHeader
+                title="Contact Us"
+                description="Have a question or want to work with us? We'd love to hear from you."
+            />
 
-            <section className="page-section bg-white">
-                <div className="container-custom">
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 lg:gap-16">
-                        {/* Contact Info */}
-                        <div className="lg:col-span-1 space-y-6">
-                            <div>
-                                <h2 className="text-2xl font-heading font-bold text-gray-900 mb-2">Get In Touch</h2>
-                                <p className="text-gray-500 text-sm">We&apos;re here to help. Send us a message and we&apos;ll respond as soon as possible.</p>
+            <PageContainer className="bg-white">
+                <div className="grid lg:grid-cols-2 gap-16 max-w-6xl mx-auto items-start">
+                    {/* Contact Information */}
+                    <div>
+                        <div className="mb-10">
+                            <h2 className="text-3xl font-heading font-bold text-gray-900 mb-4">
+                                Get In Touch
+                            </h2>
+                            <p className="text-gray-600 text-lg">
+                                Fill out the form and our team will get back to you within 24 hours.
+                            </p>
+                        </div>
+
+                        <div className="space-y-8">
+                            <div className="flex gap-4 items-start">
+                                <div className="w-12 h-12 bg-primary-50 rounded-xl flex items-center justify-center flex-shrink-0 text-primary-600">
+                                    <MapPin size={24} />
+                                </div>
+                                <div>
+                                    <h3 className="font-heading font-semibold text-gray-900 mb-1 text-lg">Office</h3>
+                                    <p className="text-gray-600 leading-relaxed max-w-xs">
+                                        {contactInfo.address || "123 Business Avenue, Tech District, City, Country"}
+                                    </p>
+                                </div>
                             </div>
 
-                            <div className="space-y-5">
-                                {[
-                                    { icon: MapPin, label: "Address", value: address, href: undefined },
-                                    { icon: Phone, label: "Phone", value: phone, href: `tel:${phone}` },
-                                    { icon: Mail, label: "Email", value: email, href: `mailto:${email}` },
-                                    { icon: Clock, label: "Working Hours", value: "Mon – Fri: 9AM – 6PM", href: undefined },
-                                ].map(({ icon: Icon, label, value, href }) => (
-                                    <div key={label} className="flex gap-4">
-                                        <div className="w-11 h-11 bg-primary-100 text-primary-700 rounded-xl flex items-center justify-center flex-shrink-0">
-                                            <Icon size={18} />
-                                        </div>
-                                        <div>
-                                            <p className="text-xs text-gray-400 uppercase tracking-wide font-medium mb-0.5">{label}</p>
-                                            {href ? (
-                                                <a href={href} className="text-gray-700 text-sm hover:text-primary-700 transition-colors">{value}</a>
-                                            ) : (
-                                                <p className="text-gray-700 text-sm">{value}</p>
-                                            )}
-                                        </div>
-                                    </div>
-                                ))}
+                            <div className="flex gap-4 items-start">
+                                <div className="w-12 h-12 bg-primary-50 rounded-xl flex items-center justify-center flex-shrink-0 text-primary-600">
+                                    <Phone size={24} />
+                                </div>
+                                <div>
+                                    <h3 className="font-heading font-semibold text-gray-900 mb-1 text-lg">Phone</h3>
+                                    <p className="text-gray-600">
+                                        <a href={`tel:${contactInfo.phone || "+1234567890"}`} className="hover:text-primary-600 transition-colors">
+                                            {contactInfo.phone || "+1 (234) 567-890"}
+                                        </a>
+                                    </p>
+                                    <p className="text-gray-500 text-sm mt-1">Mon-Fri from 8am to 5pm.</p>
+                                </div>
+                            </div>
+
+                            <div className="flex gap-4 items-start">
+                                <div className="w-12 h-12 bg-primary-50 rounded-xl flex items-center justify-center flex-shrink-0 text-primary-600">
+                                    <Mail size={24} />
+                                </div>
+                                <div>
+                                    <h3 className="font-heading font-semibold text-gray-900 mb-1 text-lg">Email</h3>
+                                    <p className="text-gray-600">
+                                        <a href={`mailto:${contactInfo.email || "hello@webmarket.com"}`} className="hover:text-primary-600 transition-colors">
+                                            {contactInfo.email || "hello@webmarket.com"}
+                                        </a>
+                                    </p>
+                                    <p className="text-gray-500 text-sm mt-1">We typically reply within 24 hours.</p>
+                                </div>
                             </div>
                         </div>
 
-                        {/* Form */}
-                        <div className="lg:col-span-2">
-                            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-8">
-                                <h3 className="text-xl font-heading font-semibold text-gray-900 mb-6">Send Us a Message</h3>
-                                <ContactForm />
-                            </div>
+                        {/* Map or image placeholder */}
+                        <div className="mt-12 h-64 bg-gray-100 rounded-2xl overflow-hidden relative">
+                            <iframe width="100%" height="100%" frameBorder="0" scrolling="no" src="https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q=New%20York+(My%20Business%20Name)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"></iframe>
                         </div>
                     </div>
 
-                    {/* Map */}
-                    {mapsEmbed && (
-                        <div className="mt-16 rounded-2xl overflow-hidden h-80 border border-gray-200 shadow-sm">
-                            <div dangerouslySetInnerHTML={{ __html: mapsEmbed }} className="w-full h-full [&_iframe]:w-full [&_iframe]:h-full [&_iframe]:border-0" />
-                        </div>
-                    )}
-                    {!mapsEmbed && (
-                        <div className="mt-16 rounded-2xl overflow-hidden h-80 bg-gray-100 border border-gray-200 flex items-center justify-center">
-                            <div className="text-center text-gray-400">
-                                <MapPin size={40} className="mx-auto mb-3 opacity-30" />
-                                <p className="text-sm">Google Maps embed can be added via the CMS Settings.</p>
-                            </div>
-                        </div>
-                    )}
+                    {/* Contact Form */}
+                    <div className="bg-white rounded-3xl p-8 shadow-xl border border-gray-100 lg:sticky lg:top-32">
+                        <ContactForm />
+                    </div>
                 </div>
-            </section>
+            </PageContainer>
         </>
     )
 }

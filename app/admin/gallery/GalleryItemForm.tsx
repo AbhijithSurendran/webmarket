@@ -1,39 +1,80 @@
 "use client"
 
 import { useState } from "react"
-import { upsertGalleryItem } from "@/app/actions/cms"
+import { addGalleryImage } from "@/app/actions/gallery"
 import ImageUpload from "@/components/admin/ImageUpload"
-import type { GalleryItem } from "@/lib/types/database"
 import { ArrowLeft, Loader2 } from "lucide-react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 
-export default function GalleryItemForm({ item }: { item?: GalleryItem }) {
-    const [imageUrl, setImageUrl] = useState(item?.image_url || "")
-    const [isActive, setIsActive] = useState(item?.is_active ?? true)
+export default function GalleryItemForm() {
+    const router = useRouter()
+    const [imageUrl, setImageUrl] = useState("")
+    const [caption, setCaption] = useState("")
     const [isPending, setIsPending] = useState(false)
+    const [error, setError] = useState("")
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
+
+        if (!imageUrl) {
+            setError("Please upload an image first.")
+            return
+        }
+
         setIsPending(true)
-        const formData = new FormData(e.currentTarget)
-        formData.set("image_url", imageUrl)
-        formData.set("is_active", String(isActive))
-        await upsertGalleryItem(formData)
+        setError("")
+
+        const formData = new FormData()
+        formData.append("url", imageUrl)
+        if (caption) formData.append("caption", caption)
+
+        const result = await addGalleryImage(formData)
+
+        if (result.success) {
+            router.push("/admin/gallery")
+            router.refresh()
+        } else {
+            setError(result.error || "An error occurred while saving the image.")
+            setIsPending(false)
+        }
     }
 
     return (
         <div className="p-6 lg:p-8 max-w-xl">
-            <div className="flex items-center gap-3 mb-8"><Link href="/admin/gallery" className="btn-ghost p-2"><ArrowLeft size={18} /></Link><h1 className="text-2xl font-heading font-bold text-gray-900">{item ? "Edit Gallery Image" : "Add Gallery Image"}</h1></div>
-            <form onSubmit={handleSubmit} className="admin-card p-6 space-y-5">
-                {item && <input type="hidden" name="id" value={item.id} />}
-                <ImageUpload value={imageUrl} onChange={setImageUrl} label="Image" />
-                <div><label className="label">Caption</label><input name="caption" type="text" defaultValue={item?.caption || ""} className="input-field" placeholder="Optional caption" /></div>
-                <div className="grid grid-cols-2 gap-4">
-                    <div><label className="label">Sort Order</label><input name="sort_order" type="number" defaultValue={item?.sort_order || 0} className="input-field" /></div>
-                    <div className="flex items-end pb-1"><label className="flex items-center gap-2 cursor-pointer"><div className={`relative w-10 h-6 rounded-full transition-colors ${isActive ? "bg-primary-600" : "bg-gray-300"}`} onClick={() => setIsActive(!isActive)}><div className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${isActive ? "translate-x-4" : ""}`} /></div><span className="text-sm text-gray-700">Active</span></label></div>
+            <div className="flex items-center gap-3 mb-8">
+                <Link href="/admin/gallery" className="btn-ghost p-2 text-gray-400 hover:text-gray-900"><ArrowLeft size={18} /></Link>
+                <h1 className="text-2xl font-heading font-bold text-gray-900">Add Gallery Image</h1>
+            </div>
+
+            {error && (
+                <div className="mb-6 p-4 bg-red-50 text-red-700 rounded-xl border border-red-100">
+                    {error}
                 </div>
-                <div className="flex gap-3 pt-2 border-t border-gray-100">
-                    <button type="submit" disabled={isPending} className="btn-primary">{isPending ? <><Loader2 size={15} className="animate-spin" /> Saving…</> : (item ? "Update" : "Add Image")}</button>
+            )}
+
+            <form onSubmit={handleSubmit} className="admin-card p-6 space-y-6">
+                <div>
+                    <h2 className="font-semibold text-gray-900 mb-4">Upload Image <span className="text-red-500">*</span></h2>
+                    <ImageUpload value={imageUrl} onChange={setImageUrl} label="Gallery Image" />
+                </div>
+
+                <div>
+                    <label className="label">Caption (Optional)</label>
+                    <input
+                        name="caption"
+                        type="text"
+                        value={caption}
+                        onChange={(e) => setCaption(e.target.value)}
+                        className="input-field"
+                        placeholder="A short description of the image"
+                    />
+                </div>
+
+                <div className="flex gap-3 pt-4 border-t border-gray-100">
+                    <button type="submit" disabled={isPending || !imageUrl} className="btn-primary shadow-md hover:shadow-lg transition-all">
+                        {isPending ? <><Loader2 size={16} className="animate-spin" /> Uploading…</> : "Upload Image"}
+                    </button>
                     <Link href="/admin/gallery" className="btn-ghost">Cancel</Link>
                 </div>
             </form>

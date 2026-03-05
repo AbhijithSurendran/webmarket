@@ -1,27 +1,44 @@
 "use server"
 
 import { createAdminClient } from "@/lib/supabase/admin"
+import { getDB, saveDB, generateId } from "@/lib/db"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 
 export async function upsertHeroSlide(formData: FormData) {
-    const supabase = createAdminClient()
     const id = formData.get("id") as string
+    const db = await getDB();
+
     const payload = {
-        image_url: formData.get("image_url") as string,
+        id: id || generateId(),
+        imageUrl: formData.get("image_url") as string,
         title: formData.get("title") as string,
         description: formData.get("description") as string || null,
-        button_text: formData.get("button_text") as string || null,
-        button_link: formData.get("button_link") as string || null,
-        sort_order: parseInt(formData.get("sort_order") as string) || 0,
-        is_active: formData.get("is_active") === "true",
+        buttonText: formData.get("button_text") as string || null,
+        buttonLink: formData.get("button_link") as string || null,
+        sortOrder: parseInt(formData.get("sort_order") as string) || 0,
+        isActive: formData.get("is_active") === "true",
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
     }
 
     if (id) {
-        await supabase.from("hero_sliders").update(payload).eq("id", id)
+        const index = db.heroSliders.findIndex(s => s.id === id);
+        if (index !== -1) {
+            // Keep original createdAt
+            payload.createdAt = db.heroSliders[index].createdAt;
+            db.heroSliders[index] = payload;
+        } else {
+            db.heroSliders.push(payload);
+        }
     } else {
-        await supabase.from("hero_sliders").insert(payload)
+        db.heroSliders.push(payload)
     }
+
+    // Sort by order before saving
+    db.heroSliders.sort((a, b) => a.sortOrder - b.sortOrder);
+
+    await saveDB(db);
 
     revalidatePath("/")
     revalidatePath("/admin/hero-sliders")
@@ -29,8 +46,10 @@ export async function upsertHeroSlide(formData: FormData) {
 }
 
 export async function deleteHeroSlide(id: string) {
-    const supabase = createAdminClient()
-    await supabase.from("hero_sliders").delete().eq("id", id)
+    const db = await getDB();
+    db.heroSliders = db.heroSliders.filter(s => s.id !== id);
+    await saveDB(db);
+
     revalidatePath("/")
     revalidatePath("/admin/hero-sliders")
 }

@@ -1,37 +1,33 @@
 "use client"
 
-import { useState, useActionState } from "react"
-import { createClient } from "@/lib/supabase/client"
+import { useEffect, useState } from "react"
+import { useFormState, useFormStatus } from "react-dom"
 import { useRouter } from "next/navigation"
-import { Eye, EyeOff, Loader2 } from "lucide-react"
+import { Eye, EyeOff, Loader2, AlertCircle } from "lucide-react"
+import { loginAction, type AuthState } from "@/app/actions/auth"
+
+const initialState: AuthState = {}
+
+function SubmitButton() {
+    const { pending } = useFormStatus();
+    return (
+        <button type="submit" disabled={pending} className="btn-primary w-full mt-2 flex justify-center items-center gap-2">
+            {pending ? <><Loader2 size={16} className="animate-spin" /> Signing in…</> : "Sign In"}
+        </button>
+    )
+}
 
 export default function LoginPage() {
+    const [state, action] = useFormState(loginAction, initialState)
     const [showPassword, setShowPassword] = useState(false)
-    const [error, setError] = useState("")
-    const [isPending, setIsPending] = useState(false)
     const router = useRouter()
 
-    async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-        e.preventDefault()
-        setIsPending(true)
-        setError("")
-
-        const formData = new FormData(e.currentTarget)
-        const email = formData.get("email") as string
-        const password = formData.get("password") as string
-
-        const supabase = createClient()
-        const { error: authError } = await supabase.auth.signInWithPassword({ email, password })
-
-        if (authError) {
-            setError("Invalid email or password. Please try again.")
-            setIsPending(false)
-            return
+    useEffect(() => {
+        if (state.success) {
+            router.push("/admin")
+            router.refresh()
         }
-
-        router.push("/admin")
-        router.refresh()
-    }
+    }, [state.success, router])
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-primary-950 to-secondary-900 flex items-center justify-center p-4">
@@ -47,13 +43,14 @@ export default function LoginPage() {
                 <div className="bg-white rounded-2xl shadow-2xl p-8">
                     <h2 className="text-xl font-heading font-semibold text-gray-900 mb-6">Admin Sign In</h2>
 
-                    {error && (
-                        <div className="mb-5 p-3.5 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm">
-                            {error}
+                    {state.error && (
+                        <div className="mb-5 p-3.5 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm flex gap-3 items-start">
+                            <AlertCircle size={20} className="flex-shrink-0 mt-0.5" />
+                            {state.error}
                         </div>
                     )}
 
-                    <form onSubmit={handleSubmit} className="space-y-5">
+                    <form action={action} className="space-y-5">
                         <div>
                             <label className="label" htmlFor="admin-email">Email Address</label>
                             <input
@@ -88,9 +85,7 @@ export default function LoginPage() {
                                 </button>
                             </div>
                         </div>
-                        <button type="submit" disabled={isPending} className="btn-primary w-full mt-2">
-                            {isPending ? <><Loader2 size={16} className="animate-spin" /> Signing in…</> : "Sign In"}
-                        </button>
+                        <SubmitButton />
                     </form>
 
                     <p className="text-center text-xs text-gray-400 mt-6">

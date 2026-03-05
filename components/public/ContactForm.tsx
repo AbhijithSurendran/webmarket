@@ -1,14 +1,27 @@
 "use client"
 
-import { useActionState } from "react"
 import { useEffect, useRef } from "react"
+import { useFormState, useFormStatus } from "react-dom"
 import { submitContactForm, type ContactFormState } from "@/app/actions/contact"
 import { CheckCircle, AlertCircle, Loader2 } from "lucide-react"
 
 const initialState: ContactFormState = {}
 
+function SubmitButton() {
+    const { pending } = useFormStatus();
+    return (
+        <button type="submit" disabled={pending} className="btn-primary w-full flex justify-center items-center gap-2">
+            {pending ? (
+                <><Loader2 size={16} className="animate-spin" /> Sending…</>
+            ) : (
+                "Send Message"
+            )}
+        </button>
+    )
+}
+
 export default function ContactForm() {
-    const [state, action, isPending] = useActionState(submitContactForm, initialState)
+    const [state, action] = useFormState(submitContactForm, initialState)
     const formRef = useRef<HTMLFormElement>(null)
 
     useEffect(() => {
@@ -65,13 +78,7 @@ export default function ContactForm() {
                 {state.fieldErrors?.message && <p className="text-red-500 text-xs mt-1">{state.fieldErrors.message}</p>}
             </div>
 
-            <button type="submit" disabled={isPending} className="btn-primary w-full">
-                {isPending ? (
-                    <><Loader2 size={16} className="animate-spin" /> Sending…</>
-                ) : (
-                    "Send Message"
-                )}
-            </button>
+            <SubmitButton />
         </form>
     )
 }

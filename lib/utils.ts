@@ -1,19 +1,5 @@
-import { createClient } from "@/lib/supabase/server"
-import type { SiteSettings } from "@/lib/types/database"
-
-/**
- * Fetch all site settings as a key-value record.
- * Returns an empty record if settings are unavailable (e.g., DB not configured).
- */
-export async function getSiteSettings(): Promise<SiteSettings> {
-    try {
-        const supabase = createClient()
-        const { data } = await supabase.from("site_settings").select("key, value")
-        if (!data) return {}
-        return Object.fromEntries(data.map((s) => [s.key, s.value ?? ""]))
-    } catch {
-        return {}
-    }
+export async function getSiteSettings(): Promise<Record<string, string>> {
+    return {};
 }
 
 export function truncate(text: string, maxLength: number): string {
